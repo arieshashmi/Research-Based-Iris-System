@@ -1,0 +1,121 @@
+import cv2
+import numpy as np
+import glob
+import pickle
+from keras.applications.vgg16 import preprocess_input
+from sklearn import preprocessing
+from tensorflow.keras.utils import to_categorical
+from keras.preprocessing import image
+import keras
+import joblib
+from keras.models import Model
+from keras.applications.vgg16 import VGG16
+
+imgs = []
+final_output_84_84 = []
+labels = []
+
+for filefilepath in glob.iglob('final_casia/*'):
+    if filefilepath.endswith('.jpg') or filefilepath.endswith('.jpeg') or filefilepath.endswith('.png'):
+        img = cv2.imread(filefilepath)
+        imgs_colored = cv2.imread(filefilepath)
+
+        label = filefilepath.split(".")[0][12:]
+        example_number = filefilepath.split(".")[1]
+
+        imgs.append([imgs_colored, int(label)])
+
+import random
+random.shuffle(imgs)
+
+for i, j in imgs:
+    final_output_84_84.append(cv2.resize(i.astype(np.float32), (70, 70)))
+    labels.append(j)
+
+y = to_categorical(labels, num_classes=1000, dtype='float32')
+final_output_84_84 = np.array(final_output_84_84, dtype="float16") / 255
+
+base_model = VGG16(include_top=False, input_shape=(70, 70, 3))
+bottleneck_input = base_model.input
+bottleneck_output = base_model.layers[-1].output
+bottleneck_model = Model(inputs=bottleneck_input, outputs=bottleneck_output)
+
+test = final_output_84_84[0]
+test = cv2.resize(test.astype(np.float32), (70, 70))
+test = test.reshape(1, 70, 70, 3)
+test_shape = bottleneck_model.predict(test).shape
+shape = (final_output_84_84.shape[0], test_shape[1], test_shape[2], test_shape[3])
+
+bottleneck_features = []
+for i in final_output_84_84:
+    i = cv2.resize(i.astype(np.float32), (70, 70))
+    bottleneck_features.append(bottleneck_model.predict(i.reshape(1, 70, 70, 3)))
+
+bottleneck_features = np.array(bottleneck_features)
+bottleneck_features = bottleneck_features.reshape(shape)
+
+print(bottleneck_features.shape)
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(bottleneck_features, y, test_size=0.1, random_state=42)
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+
+model = Sequential()
+model.add(Flatten(input_shape=x_train.shape[1:]))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1000, activation='softmax'))
+
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+history = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=150, batch_size=32)
+
+import matplotlib.pyplot as plt
+
+# plot accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+# plot loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+#predict labels for test set using keras model
+y_pred_keras = model.predict(x_test)
+y_pred_keras = (y_pred_keras > 0.5).astype(int) # convert probabilities to binary labels
+y_pred_keras
+
+from sklearn.preprocessing import LabelBinarizer
+from sklearn.metrics import roc_curve, auc
+
+#Binarize the labels
+lb = LabelBinarizer()
+y_test = lb.fit_transform(y_test)
+y_pred_keras = model.predict(x_test)
+
+#Compute ROC curve and ROC area for each class
+fpr_keras, tpr_keras, thresholds_keras = roc_curve(y_test.ravel(), y_pred_keras.ravel())
+auc_keras = auc(fpr_keras, tpr_keras)
+
+#Plot the ROC curves
+plt.figure(1)
+plt.plot([0, 1], [0, 1], 'k--')
+plt.plot(fpr_keras, tpr_keras, label='Keras (area = {:.3f})'.format(auc_keras))
+plt.xlabel('False positive rate')
+plt.ylabel('True positive rate')
+plt.title('ROC curve')
+plt.legend(loc='best')
+plt.show()
