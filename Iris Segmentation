@@ -37,7 +37,7 @@ for filepath in glob.iglob('test/*'):
 '''
 
 #'''
-for filepath in glob.iglob('dataset/*'):
+for filepath in glob.iglob('CASIA-Iris-Thousand/*'):
     
     
     for filefilepath in glob.iglob(filepath+'/L/*'):
@@ -75,7 +75,7 @@ import random
 random.shuffle(imgs)
 
 test=[]
-for i,L,c in imgs:
+for i,j,L,c in imgs:
     
     golden_refrence = sum(sum(transform_image(i,0)))
     #print("golden refrence  = "+str(golden_refrence))
@@ -86,9 +86,9 @@ for i,L,c in imgs:
         suming = sum(sum(working_img))
         diffrence = suming-golden_refrence
 
-        if diffrence>50:
+        if diffrence>800:
             print("the image threshold = " ,k)
-           #print("the image name " +str(j))
+            print("the image name " +str(j))
             print(" " )
 
 
