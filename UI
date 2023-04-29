@@ -1,0 +1,242 @@
+   
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk, filedialog
+from tkinter.filedialog import askopenfile
+import os
+    # import required module
+from pathlib import Path
+     
+from PIL import Image, ImageTk
+root = Tk()  # create parent window
+root.geometry("660x350")
+root.resizable(False, False)
+global selected_image_name
+selected_image_name=None
+# use Button and Label widgets to create a simple TV remote
+#Segmentation Window
+def image_conversion_section(image_n):
+    image1 = Image.open(image_n)
+    test = ImageTk.PhotoImage(image1)
+    return test
+def on_click():
+   messagebox.showerror('Error',"Dataset Selection Error !")
+
+def openExtractionWindow():
+    choice_option=messagebox.askyesno("Extraction","Do You Want to Extract Again ?")
+    if(choice_option):
+        os.system('python iris_extraction_2.py dataset/*')
+    
+
+
+    # Toplevel object which will
+    # be treated as a new window
+    newWindow = Toplevel(root)
+
+        # label1 = Label(image=img,width=260,height=200)
+        # label1.image = img
+        # label1.place(x=630,y=76)
+    # sets the title of the
+    # Toplevel widget
+    newWindow.title("Image-Extraction-Area")
+ 
+    # sets the geometry of toplevel
+    newWindow.geometry("1075x800")
+    folder_dir = 'final_casia'
+    images = Path(folder_dir).glob('*.jpg')
+    images_path=list(images)
+    
+    img0=image_conversion_section(images_path[0])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=20)
+    
+    img0=image_conversion_section(images_path[1])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=20)
+    
+    img0=image_conversion_section(images_path[2])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=20)
+    
+    img0=image_conversion_section(images_path[3])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=20)
+    
+    img0=image_conversion_section(images_path[4])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=20)
+    
+    img0=image_conversion_section(images_path[5])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=180)
+    
+    img0=image_conversion_section(images_path[6])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=180)
+    
+    img0=image_conversion_section(images_path[7])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=180)
+    
+    img0=image_conversion_section(images_path[8])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=180)
+    
+    img0=image_conversion_section(images_path[9])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=180)
+    
+    img0=image_conversion_section(images_path[10])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=340)
+    
+    img0=image_conversion_section(images_path[11])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=340)
+    
+    img0=image_conversion_section(images_path[12])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=340)
+    
+    img0=image_conversion_section(images_path[13])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=340)
+    
+    img0=image_conversion_section(images_path[14])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=340)
+    
+    img0=image_conversion_section(images_path[15])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=500)
+    
+    img0=image_conversion_section(images_path[16])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=500)
+    
+    img0=image_conversion_section(images_path[17])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=500)
+    
+    img0=image_conversion_section(images_path[18])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=500)
+    
+    img0=image_conversion_section(images_path[19])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=500)
+
+
+def openSegmentationWindow():
+     
+    # Toplevel object which will
+    # be treated as a new window
+    newWindow = Toplevel(root)
+ 
+    # sets the title of the
+    # Toplevel widget
+    newWindow.title("Image-Segmentation-Area")
+ 
+    # sets the geometry of toplevel
+    newWindow.geometry("800x500")
+ 
+    # A Label widget to show in toplevel
+    Label(newWindow,
+          text =selected_image_name).pack()        
+def openAcuracyWindow():
+     
+    # Toplevel object which will
+    # be treated as a new window
+    newWindow = Toplevel(root)
+ 
+    # sets the title of the
+    # Toplevel widget
+    newWindow.title("Image-Acuracry-Area")
+ 
+    # sets the geometry of toplevel
+    newWindow.geometry("700x450")
+ 
+    # A Label widget to show in toplevel
+    Label(newWindow,
+          text =selected_image_name).pack()        
+
+
+def segmentation_process():
+
+    if(selected_image_name==None):
+        on_click()
+    else:
+        openSegmentationWindow()
+def extraction_process():
+    if(selected_image_name==None):
+        on_click()
+    else:
+        openExtractionWindow()
+def accuracy_process():
+    if(selected_image_name==None):
+        on_click()
+    else:
+        openAcuracyWindow()
+def open_file():
+    file = filedialog.askdirectory()
+    if file:
+        global selected_image_name
+        selected_image_name=file
+        Label(root,text="Dataset-Source : ",fg='purple',font=('Time',12,'bold')).place(x=5,y=300)
+        imagename=Label(root,text=selected_image_name,fg='green',font=('Time',12))
+        imagename.place(x=140,y=300)
+
+def donothing():
+   filewin = Toplevel(root)
+   button = Button(filewin, text="Do nothing button")
+   button.pack()        
+
+# Creating Menubar
+
+menubar = Menu(root)
+  
+# Adding File Menu and commands
+file = Menu(menubar, tearoff = 0)
+menubar.add_cascade(label ='File', menu = file)
+
+file.add_command(label ='Exit', command = root.destroy)
+  
+# display Menu
+root.config(menu = menubar)
+volume = Label(root, text="Iris Detection System",font=('Times', 30),relief=RIDGE,padx=50,borderwidth=3)
+volume.place(x=110,y=20)
+volume.config(fg="#0000FF")
+volume.config(bg="yellow")
+labelframe = LabelFrame(root,width=600,height=200,borderwidth=4)
+labelframe.place(x=30,y=80)
+turn_on = Button(labelframe,command=open_file, text="Browse",font=('Arial', 14),relief=RAISED,cursor="hand2")
+turn_on.place(x=50,y=20)
+turn_on = Button(labelframe,command=segmentation_process, text="Segmentation",font=('Arial', 14),relief=RAISED,cursor="hand2")
+turn_on.place(x=210,y=20)
+turn_on = Button(labelframe,command=extraction_process, text="Extraction",font=('Arial', 14),relief=RAISED,cursor="hand2")
+turn_on.place(x=400,y=20)
+turn_on = Button(labelframe,command=accuracy_process, text="Accuracy",font=('Arial', 14),relief=RAISED,cursor="hand2")
+turn_on.place(x=230,y=100)
+
+
+root.mainloop()
