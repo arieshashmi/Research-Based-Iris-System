@@ -1,51 +1,137 @@
-
 import cv2
 import os
 import glob
 import numpy as np
+from scipy.spatial import distance
+from sklearn.preprocessing import normalize
+import math
 
-def perform_iris_segmentation(image):
-    # Convert image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # Apply Gaussian blur to reduce noise
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    
-    # Perform Canny edge detection
-    edges = cv2.Canny(blurred, 50, 150)
-    
-    # Apply morphological closing to close gaps in edges
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
-    closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
-    
-    # Find contours in the closed image
-    contours, _ = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
+def find_pupil(img):
+    # Apply Canny edge detection
+    edges = cv2.Canny(img, 30, 70)
+
+    # Apply Circular Hough Transform to detect circles (pupils)
+    circles = cv2.HoughCircles(edges, cv2.HOUGH_GRADIENT, dp=1, minDist=100, param1=50, param2=30, minRadius=10, maxRadius=100)
+
+    if circles is not None:
+        circles = np.round(circles[0, :]).astype(int)
+        if len(circles) > 0:
+            # Sort circles by radius in descending order
+            circles = sorted(circles, key=lambda x: x[2], reverse=True)
+            return circles[0]  # Return the largest detected circle (pupil)
+
+    return None
+
+def IrisLocalization(images):
+    boundary = []  # initialize empty list that will eventually contain all the images with boundaries
+    centers = []  # initialize empty list that will contain the centers of the boundary circles
+    for img in images:
+        draw_img = img.copy()
+
+        # Preprocess image by equalizing histogram and enhancing contrast
+        img = cv2.equalizeHist(img)
+        img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)
+
+        # Find the pupil using Circular Hough Transform
+        pupil_circle = find_pupil(img)
+
+        if pupil_circle is not None:
+            # Extract the pupil circle parameters
+            center_x, center_y, radius_pupil = pupil_circle
+            boundary_circle_radius = radius_pupil + 53
+
+            # Draw inner and outer boundaries on the image
+            #cv2.circle(draw_img, (center_x, center_y), radius_pupil, (255, 0, 0), 3)
+
+            boundary.append(draw_img)
+            centers.append([center_x, center_y, radius_pupil])
+        else:
+            print("Could not find pupil in the image.")
+
+    return boundary, centers
+
+def IrisNormalization(boundary, centers):
+    target = [img for img in boundary]
+    normalized = []
+    for img in target:
+        # Perform iris normalization
+        res = cv2.resize(img, (50, 50))
+        normalized.append(res)
+    return normalized
+
+def ImageEnhancement(normalized):
+    enhanced = []
+    for res in normalized:
+        # Perform image enhancement by equalizing histogram
+        res = cv2.equalizeHist(res)
+        enhanced.append(res)
+    return enhanced
+
+def preprocess_image(enhanced):
+    # Apply Canny edge detection
+    edges = cv2.Canny(enhanced, 30, 70)
+
+    # Find contours
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
     # Find the largest contour
-    largest_contour = max(contours, key=cv2.contourArea)
-    
-    # Create a mask for the largest contour
-    mask = np.zeros_like(gray)
-    cv2.drawContours(mask, [largest_contour], 0, (255), -1)
-    
-    # Apply the mask to the original image
-    segmented = cv2.bitwise_and(image, image, mask=mask)
-    
-    return segmented, largest_contour
-def process_image(filepath):
-    image = cv2.imread(filepath)
-    image = cv2.resize(image, (200, 150))
-    # Perform iris segmentation
-    segmented_image, largest_contour = perform_iris_segmentation(image)
-    
-    # Draw a bounding rectangle around the iris
-    x, y, w, h = cv2.boundingRect(largest_contour)
-    cv2.rectangle(segmented_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    
-    # Save the segmented image
-    output_path = 'output/' + os.path.basename(filepath)
-    cv2.imwrite(output_path, segmented_image)
+    max_contour = max(contours, key=cv2.contourArea)
 
-   # Process all images in the input directory
+    # Create a mask of the largest contour
+    mask = np.zeros_like(enhanced)
+    cv2.drawContours(mask, [max_contour], 0, (255), thickness=cv2.FILLED)
+
+    # Apply the mask to the original image
+    masked_img = cv2.bitwise_and(enhanced, enhanced, mask=mask)
+
+    # Apply thresholding
+    _, thresholded = cv2.threshold(masked_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Apply Gaussian blur
+    blurred = cv2.GaussianBlur(thresholded, (5, 5), 0)
+
+    return blurred
+
+def process_image(filepath):
+    image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    image = cv2.resize(image, (200, 150))
+
+    # Perform iris localization
+    boundary, centers = IrisLocalization([image])
+
+    if len(boundary) > 0:
+        # Extract the segmented iris region
+        segmented_iris = boundary[0]
+
+        # Perform iris normalization
+        normalized = IrisNormalization([segmented_iris], centers)
+
+        if len(normalized) > 0:
+            # Extract the normalized iris image
+            normalized_iris = normalized[0]
+
+            # Perform image enhancement
+            enhanced = ImageEnhancement([normalized_iris])
+
+            if len(enhanced) > 0:
+                # Extract the enhanced iris image
+                enhanced_iris = enhanced[0]
+
+                # Perform preprocessing and get the blurred iris image
+                blurred_iris = preprocess_image(enhanced_iris)
+
+                # Find contours of the iris region
+                contours, _ = cv2.findContours(blurred_iris, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+                # Find the bounding square around the iris region
+                x, y, w, h = cv2.boundingRect(contours[0])
+                iris_with_square = cv2.rectangle(enhanced_iris.copy(), (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+                # Save the segmented and annotated iris image
+                output_path = 'output/' + os.path.basename(filepath)
+                cv2.imwrite(output_path, iris_with_square)
+
+# Process all images in the input directory and save the output in the output directory
 input_directory = 'dataset/'
 output_directory = 'output/'
 if not os.path.exists(output_directory):
@@ -54,5 +140,3 @@ if not os.path.exists(output_directory):
 for filepath in glob.iglob(input_directory + '**/*.jpg', recursive=True):
     process_image(filepath)
     print('Processed:', filepath)
-    
-   
