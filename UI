@@ -1,4 +1,5 @@
-   
+
+    
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk, filedialog
@@ -148,6 +149,9 @@ def openExtractionWindow():
 
 
 def openSegmentationWindow():
+    choice_option=messagebox.askyesno("Segmentation","Do You Want to Segment Again ?")
+    if(choice_option):
+        os.system('python seg.py dataset/*')
      
     # Toplevel object which will
     # be treated as a new window
@@ -156,9 +160,112 @@ def openSegmentationWindow():
     # sets the title of the
     # Toplevel widget
     newWindow.title("Image-Segmentation-Area")
- 
+    
     # sets the geometry of toplevel
-    newWindow.geometry("800x500")
+    newWindow.geometry("1050x800")
+    folder_dir = 'output'
+    images = Path(folder_dir).glob('*.jpg')
+    images_path=list(images)
+    
+    img0=image_conversion_section(images_path[0])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=20)
+    
+    img0=image_conversion_section(images_path[1])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=20)
+    
+    img0=image_conversion_section(images_path[2])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=20)
+    
+    img0=image_conversion_section(images_path[3])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=20)
+    
+    img0=image_conversion_section(images_path[4])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=20)
+    
+    img0=image_conversion_section(images_path[5])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=180)
+    
+    img0=image_conversion_section(images_path[6])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=180)
+    
+    img0=image_conversion_section(images_path[7])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=180)
+    
+    img0=image_conversion_section(images_path[8])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=180)
+    
+    img0=image_conversion_section(images_path[9])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=180)
+    
+    img0=image_conversion_section(images_path[10])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=340)
+    
+    img0=image_conversion_section(images_path[11])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=340)
+    
+    img0=image_conversion_section(images_path[12])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=340)
+    
+    img0=image_conversion_section(images_path[13])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=340)
+    
+    img0=image_conversion_section(images_path[14])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=340)
+    
+    img0=image_conversion_section(images_path[15])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=5,y=500)
+    
+    img0=image_conversion_section(images_path[16])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=220,y=500)
+    
+    img0=image_conversion_section(images_path[17])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=435,y=500)
+    
+    img0=image_conversion_section(images_path[18])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=650,y=500)
+    
+    img0=image_conversion_section(images_path[19])
+    label1 = Label(newWindow,image=img0)
+    label1.image = img0
+    label1.place(x=865,y=500)
  
     # A Label widget to show in toplevel
     Label(newWindow,
