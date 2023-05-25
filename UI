@@ -7,6 +7,10 @@ from tkinter.filedialog import askopenfile
 import os
     # import required module
 from pathlib import Path
+
+from PIL import Image, ImageTk
+
+
      
 from PIL import Image, ImageTk
 root = Tk()  # create parent window
@@ -14,6 +18,13 @@ root.geometry("660x350")
 root.resizable(False, False)
 global selected_image_name
 selected_image_name=None
+
+# Background Image
+background_image = Image.open("background.jpg")
+background_photo = ImageTk.PhotoImage(background_image)
+background_label = Label(root, image=background_photo)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 # use Button and Label widgets to create a simple TV remote
 #Segmentation Window
 def image_conversion_section(image_n):
