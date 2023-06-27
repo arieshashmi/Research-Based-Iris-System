@@ -1,17 +1,10 @@
-
-    
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 import os
-    # import required module
-from pathlib import Path
-
-from PIL import Image, ImageTk
-
-
-     
+# import required module
+from pathlib import Path     
 from PIL import Image, ImageTk
 root = Tk()  # create parent window
 root.geometry("660x350")
@@ -282,20 +275,58 @@ def openSegmentationWindow():
     Label(newWindow,
           text =selected_image_name).pack()        
 def openAcuracyWindow():
-     
-    # Toplevel object which will
-    # be treated as a new window
-    newWindow = Toplevel(root)
- 
-    # sets the title of the
-    # Toplevel widget
-    newWindow.title("Image-Acuracry-Area")
- 
-    # sets the geometry of toplevel
-    newWindow.geometry("700x450")
+   newWindow = Toplevel(root)
+   newWindow.title("Image-Acuracry-Area")
+   newWindow.geometry("500x300")
+   newWindow.resizable("False",'False')
+
+   # Button 1
+   button1 = Label(newWindow, text="DenseNet", font=('Arial', 14))
+   button1.place(x=50, y=30)
+   read_list=[]
+   file1 = open('accuracy_and_loss_dense_net.txt', 'r')
+   Lines = file1.readlines()
+   for a in Lines:
+       print(a)
+       read_list.append(a)
+   file1.close()
+   # Text View 1
+   
+   text1 = Label(newWindow, text = "\t"+str(read_list[0])+"\n         "+str(read_list[1]))
+   text1.place(x=10, y=60)
+
+   # Button 2
+   button2 = Label(newWindow, text="VGG 16", font=('Arial', 14))
+   button2.place(x=50, y=120)
+   read_list=[]
+   file2 = open('accuracy_and_loss_VGG16.txt', 'r')
+   Lines = file2.readlines()
+   for b in Lines:
+       print(b)
+       read_list.append(b)
+   file2.close()
+
+   # Text View 2
+   text2 = Label(newWindow, text = "\t"+str(read_list[0])+"\n         "+str(read_list[1]))
+   text2.place(x=10, y=150)
+
+   # Button 3
+   button3 = Label(newWindow, text="Xception", font=('Arial', 14))
+   button3.place(x=50, y=210)
+   read_list=[]
+   file3 = open('accuracy_and_loss_Xception.txt', 'r')
+   Lines = file3.readlines()
+   for c in Lines:
+       print(c)
+       read_list.append(c)
+   file3.close()
+
+   # Text View 3
+   text3 = Label(newWindow, text = "\t"+str(read_list[0])+"\n         "+str(read_list[1]))
+   text3.place(x=10, y=240)
  
     # A Label widget to show in toplevel
-    Label(newWindow,
+   Label(newWindow,
           text =selected_image_name).pack()        
 
 
