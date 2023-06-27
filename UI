@@ -31,18 +31,12 @@ def openExtractionWindow():
     choice_option=messagebox.askyesno("Extraction","Do You Want to Extract Again ?")
     if(choice_option):
         os.system('python iris_extraction_2.py dataset/*')
-    
-
 
     # Toplevel object which will
     # be treated as a new window
     newWindow = Toplevel(root)
 
-        # label1 = Label(image=img,width=260,height=200)
-        # label1.image = img
-        # label1.place(x=630,y=76)
-    # sets the title of the
-    # Toplevel widget
+    # sets the title of the Toplevel widget
     newWindow.title("Image-Extraction-Area")
  
     # sets the geometry of toplevel
@@ -51,106 +45,18 @@ def openExtractionWindow():
     images = Path(folder_dir).glob('*.jpg')
     images_path=list(images)
     
-    img0=image_conversion_section(images_path[0])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=20)
+    # Define the positions for displaying the images
+    positions = [(5, 20), (220, 20), (435, 20), (650, 20), (865, 20),
+                 (5, 180), (220, 180), (435, 180), (650, 180), (865, 180),
+                 (5, 340), (220, 340), (435, 340), (650, 340), (865, 340),
+                 (5, 500), (220, 500), (435, 500), (650, 500), (865, 500)]
     
-    img0=image_conversion_section(images_path[1])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=220,y=20)
-    
-    img0=image_conversion_section(images_path[2])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=435,y=20)
-    
-    img0=image_conversion_section(images_path[3])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=650,y=20)
-    
-    img0=image_conversion_section(images_path[4])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=865,y=20)
-    
-    img0=image_conversion_section(images_path[5])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=180)
-    
-    img0=image_conversion_section(images_path[6])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=220,y=180)
-    
-    img0=image_conversion_section(images_path[7])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=435,y=180)
-    
-    img0=image_conversion_section(images_path[8])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=650,y=180)
-    
-    img0=image_conversion_section(images_path[9])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=865,y=180)
-    
-    img0=image_conversion_section(images_path[10])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=340)
-    
-    img0=image_conversion_section(images_path[11])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=220,y=340)
-    
-    img0=image_conversion_section(images_path[12])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=435,y=340)
-    
-    img0=image_conversion_section(images_path[13])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=650,y=340)
-    
-    img0=image_conversion_section(images_path[14])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=865,y=340)
-    
-    img0=image_conversion_section(images_path[15])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=500)
-    
-    img0=image_conversion_section(images_path[16])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=220,y=500)
-    
-    img0=image_conversion_section(images_path[17])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=435,y=500)
-    
-    img0=image_conversion_section(images_path[18])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=650,y=500)
-    
-    img0=image_conversion_section(images_path[19])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=865,y=500)
-
+    # Display the images using a loop
+    for i, position in enumerate(positions):
+        img0 = image_conversion_section(images_path[i])
+        label1 = Label(newWindow, image=img0)
+        label1.image = img0
+        label1.place(x=position[0], y=position[1])
 
 def openSegmentationWindow():
     choice_option=messagebox.askyesno("Segmentation","Do You Want to Segment Again ?")
@@ -171,109 +77,22 @@ def openSegmentationWindow():
     images = Path(folder_dir).glob('*.jpg')
     images_path=list(images)
     
-    img0=image_conversion_section(images_path[0])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=20)
+    # Define the positions for displaying the images
+    positions = [(5, 20), (150, 20), (295, 20), (440, 20), (585, 20),
+                 (5, 180), (150, 180), (295, 180), (440, 180), (585, 180),
+                 (5, 340), (150, 340), (295, 340), (440, 340), (585, 340),
+                 (5, 500), (150, 500), (295, 500), (440, 500), (585, 500)]
     
-    img0=image_conversion_section(images_path[1])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=150,y=20)
-    
-    img0=image_conversion_section(images_path[2])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=295,y=20)
-    
-    img0=image_conversion_section(images_path[3])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=440,y=20)
-    
-    img0=image_conversion_section(images_path[4])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=585,y=20)
-    
-    img0=image_conversion_section(images_path[5])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=180)
-    
-    img0=image_conversion_section(images_path[6])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=150,y=180)
-    
-    img0=image_conversion_section(images_path[7])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=295,y=180)
-    
-    img0=image_conversion_section(images_path[8])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=440,y=180)
-    
-    img0=image_conversion_section(images_path[9])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=585,y=180)
-    
-    img0=image_conversion_section(images_path[10])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=340)
-    
-    img0=image_conversion_section(images_path[11])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=150,y=340)
-    
-    img0=image_conversion_section(images_path[12])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=295,y=340)
-    
-    img0=image_conversion_section(images_path[13])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=440,y=340)
-    
-    img0=image_conversion_section(images_path[14])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=585,y=340)
-    
-    img0=image_conversion_section(images_path[15])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=5,y=500)
-    
-    img0=image_conversion_section(images_path[16])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=150,y=500)
-    
-    img0=image_conversion_section(images_path[17])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=295,y=500)
-    
-    img0=image_conversion_section(images_path[18])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=440,y=500)
-    
-    img0=image_conversion_section(images_path[19])
-    label1 = Label(newWindow,image=img0)
-    label1.image = img0
-    label1.place(x=585,y=500)
+    # Display the images using a loop
+    for i, position in enumerate(positions):
+        img0 = image_conversion_section(images_path[i])
+        label1 = Label(newWindow, image=img0)
+        label1.image = img0
+        label1.place(x=position[0], y=position[1])
  
-    # A Label widget to show in toplevel
-    Label(newWindow,
-          text =selected_image_name).pack()        
+    # A Label widget to show the selected image name
+    Label(newWindow, text=selected_image_name).pack()
+      
 def openAcuracyWindow():
    newWindow = Toplevel(root)
    newWindow.title("Image-Acuracry-Area")
